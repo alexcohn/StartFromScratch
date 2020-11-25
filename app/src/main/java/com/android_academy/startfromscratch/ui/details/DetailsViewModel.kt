@@ -1,9 +1,6 @@
 package com.android_academy.startfromscratch.ui.details
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.android_academy.db.Movie
 import com.android_academy.startfromscratch.di.DependencyInjection
 import com.android_academy.startfromscratch.repository.MoviesRepository
@@ -28,10 +25,11 @@ class DetailsViewModelImpl(private val moviesRepository: MoviesRepository) : Vie
 
     override fun loadMovie(movieId: Int) {
         executors.execute {
-            //TODO Call for getMovie(movieId) on Repository
-            //TODO Update live data on new received movie
-            //notice that now our data will come from DB and not from network.
-            //since our LiveData story movie it will cached for next call (e.g. after activity recreation)
+            moviesRepository.getMovie(movieId) { movie ->
+                movie?.let {
+                    movieLiveData.postValue(it)
+                }
+            }
         }
     }
 }
