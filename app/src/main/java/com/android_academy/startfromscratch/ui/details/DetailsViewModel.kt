@@ -2,8 +2,8 @@ package com.android_academy.startfromscratch.ui.details
 
 import androidx.lifecycle.*
 import com.android_academy.db.Movie
-import com.android_academy.startfromscratch.di.DependencyInjection
 import com.android_academy.startfromscratch.repository.MoviesRepository
+import kotlinx.coroutines.launch
 
 interface DetailsViewModel {
     fun observeMovieDetails(lifecycle: Lifecycle, observer: (Movie) -> Unit)
@@ -12,8 +12,6 @@ interface DetailsViewModel {
 
 class DetailsViewModelImpl(private val moviesRepository: MoviesRepository) : ViewModel(),
     DetailsViewModel {
-
-    private val executors = DependencyInjection.viewModelExecutor
 
     private val movieLiveData = MutableLiveData<Movie>()
 
@@ -24,8 +22,7 @@ class DetailsViewModelImpl(private val moviesRepository: MoviesRepository) : Vie
     }
 
     override fun loadMovie(movieId: Int) {
-        //TODO replace executor to viewModelScope.launch
-        executors.execute {
+        viewModelScope.launch {
             moviesRepository.getMovie(movieId) { movie ->
                 movie?.let {
                     movieLiveData.postValue(it)
