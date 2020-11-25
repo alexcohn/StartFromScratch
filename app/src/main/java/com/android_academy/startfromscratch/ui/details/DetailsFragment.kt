@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.android_academy.startfromscratch.R
 import com.android_academy.db.Movie
+import com.android_academy.startfromscratch.di.DependencyInjection
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.details_fragment.*
 
@@ -30,9 +32,8 @@ class DetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //TODO create class DetailsViewModelFactory which extends ViewModelProvider.Factory
-        //TODO create here DetailsViewModelFactory
-        //TODO using newly created factory use ViewModelProvider to get ViewModel of type DetailsViewModelImpl::class.java
+        val factory = DetailsViewModelFactory(DependencyInjection.networkProvider)
+        viewModel = ViewModelProvider(this, factory).get(DetailsViewModelImpl::class.java)
         return inflater.inflate(R.layout.details_fragment, container, false)
     }
 
@@ -43,7 +44,6 @@ class DetailsFragment : Fragment() {
     }
 
     private fun loadMovie(movieId: Int) {
-        //TODO just see how we are here start observation. nothing to do
         viewModel.observeMovieDetails(lifecycle){ movie ->
             activity!!.title = movie.name
             detailsMovieNameText.text = movie.name
