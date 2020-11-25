@@ -8,10 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android_academy.startfromscratch.R
 import com.android_academy.db.Movie
-import com.android_academy.db.MovieModelConverter
 import com.android_academy.startfromscratch.di.DependencyInjection
 import com.android_academy.startfromscratch.ui.details.DetailsFragment
 import kotlinx.android.synthetic.main.movies_fragment.*
@@ -19,26 +20,27 @@ import kotlinx.android.synthetic.main.movies_fragment.*
 
 class MoviesFragment : Fragment(), OnMovieClickListener {
 
-    private val executors = DependencyInjection.viewModelExecutor
-    private val moviesNetworkProvider = DependencyInjection.networkProvider
-
     companion object {
         fun newInstance() = MoviesFragment()
     }
 
     private lateinit var moviesAdapter: MoviesViewAdapter
+    lateinit var moviesViewModel: MoviesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val factory = MoviesViewModelFactory(DependencyInjection.networkProvider)
+        moviesViewModel = ViewModelProvider(this, factory).get(MoviesViewModelImpl::class.java)
         return inflater.inflate(R.layout.movies_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
-        loadData()
+        observeState()
+        observesData()
         updateUI()
     }
 
@@ -46,23 +48,9 @@ class MoviesFragment : Fragment(), OnMovieClickListener {
         activity!!.title = "Movies"
     }
 
-    private fun loadData() {
-        executors.execute {
-            setState(State.LOADING)
-            val movies = moviesNetworkProvider.getMovies()
-            if (movies == null) {
-                setState(State.ERROR)
-                return@execute
-            }
-            val convertNetworkMovieToModel = MovieModelConverter.convertNetworkMovieToModel(movies)
-            setState(State.LOADED)
-            updateData(convertNetworkMovieToModel)
-        }
-    }
-
-    private fun updateData(movies: List<Movie>) {
-        view?.post {
-            moviesAdapter.setData(movies)
+    private fun observesData() {
+        moviesViewModel.observeMovies(lifecycle ){
+            moviesAdapter.setData(it)
         }
     }
 
@@ -72,9 +60,11 @@ class MoviesFragment : Fragment(), OnMovieClickListener {
         moviesRecyclerView.adapter = moviesAdapter
     }
 
-    private fun setState(state: State) {
-        view?.post {
-            when (state) {
+    private fun observeState() {
+        moviesViewModel.getState().observe(viewLifecycleOwner, Observer {
+            if (it == null) return@Observer
+
+            when (it) {
                 State.LOADING -> moviesProgress.visibility = View.VISIBLE
                 State.LOADED -> moviesProgress.visibility = View.GONE
                 State.ERROR -> {
@@ -82,7 +72,7 @@ class MoviesFragment : Fragment(), OnMovieClickListener {
                     Toast.makeText(this.requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
                 }
             }
-        }
+        })
     }
 
     override fun onMovieClicked(movie: Movie, adapterPosition: Int) {
@@ -92,7 +82,7 @@ class MoviesFragment : Fragment(), OnMovieClickListener {
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .addToBackStack("main").commit()
     }
+
+
+
 }
-
-enum class State { LOADING, LOADED, ERROR }
-

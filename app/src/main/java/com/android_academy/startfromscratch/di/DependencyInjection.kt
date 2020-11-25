@@ -7,6 +7,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
 
 object DependencyInjection {
+    //I'm tired of implementing safe thread for all this manual dependency injection.
     val networkProvider: MovieNetworkProvider =
         MovieNetworkProviderImpl(MockNetworkDependency.movieService)
 

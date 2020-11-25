@@ -7,15 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.android_academy.startfromscratch.R
 import com.android_academy.db.Movie
-import com.android_academy.db.MovieModelConverter
-import com.android_academy.startfromscratch.di.DependencyInjection
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.details_fragment.*
 
 class DetailsFragment : Fragment() {
 
-    private val executors = DependencyInjection.viewModelExecutor
-    private val moviesNetworkProvider = DependencyInjection.networkProvider
+    private lateinit var viewModel : DetailsViewModel
 
     companion object {
         internal const val MOVIE_BUNDLE_KEY = "unique_movie_key"
@@ -33,6 +30,9 @@ class DetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //TODO create class DetailsViewModelFactory which extends ViewModelProvider.Factory
+        //TODO create here DetailsViewModelFactory
+        //TODO using newly created factory use ViewModelProvider to get ViewModel of type DetailsViewModelImpl::class.java
         return inflater.inflate(R.layout.details_fragment, container, false)
     }
 
@@ -43,27 +43,20 @@ class DetailsFragment : Fragment() {
     }
 
     private fun loadMovie(movieId: Int) {
-        executors.execute {
-            val movies = moviesNetworkProvider.getMovies() ?: return@execute
-            val convertNetworkMovieToModel = MovieModelConverter.convertNetworkMovieToModel(movies)
-            val movie =
-                convertNetworkMovieToModel.firstOrNull { it.movieId == movieId } ?: return@execute
-            view?.post {
-                setData(movie)
+        //TODO just see how we are here start observation. nothing to do
+        viewModel.observeMovieDetails(lifecycle){ movie ->
+            activity!!.title = movie.name
+            detailsMovieNameText.text = movie.name
+            detailsOverviewText.text = movie.overview
+            detailsMovieRatingText.text = movie.voteAverage.toString()
+            detailsMovieDateText.text = movie.releaseDate
+            if (movie.imageUrl.isNotEmpty()) {
+                Picasso.get()
+                    .load(movie.imageUrl)
+                    .into(detailsBgImage)
             }
         }
-    }
 
-    private fun setData(movie: Movie) {
-        activity!!.title = movie.name
-        detailsMovieNameText.text = movie.name
-        detailsOverviewText.text = movie.overview
-        detailsMovieRatingText.text = movie.voteAverage.toString()
-        detailsMovieDateText.text = movie.releaseDate
-        if (movie.imageUrl.isNotEmpty()) {
-            Picasso.get()
-                .load(movie.imageUrl)
-                .into(detailsBgImage)
-        }
+        viewModel.loadMovie(movieId)
     }
 }
