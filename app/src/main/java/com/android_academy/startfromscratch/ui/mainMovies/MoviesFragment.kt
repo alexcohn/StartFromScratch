@@ -25,6 +25,7 @@ class MoviesFragment : Fragment(), OnMovieClickListener {
     }
 
     private lateinit var moviesAdapter: MoviesViewAdapter
+    val factory = MoviesViewModelFactory(DependencyInjection.moviesRepo)
     lateinit var moviesViewModel: MoviesViewModel
 
     override fun onCreateView(

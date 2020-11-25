@@ -24,6 +24,7 @@ class DetailsViewModelImpl(private val moviesRepository: MoviesRepository) : Vie
     }
 
     override fun loadMovie(movieId: Int) {
+        //TODO replace executor to viewModelScope.launch
         executors.execute {
             moviesRepository.getMovie(movieId) { movie ->
                 movie?.let {

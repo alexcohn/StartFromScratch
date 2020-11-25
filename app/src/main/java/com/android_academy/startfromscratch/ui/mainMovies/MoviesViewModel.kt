@@ -2,8 +2,8 @@ package com.android_academy.startfromscratch.ui.mainMovies
 
 import androidx.lifecycle.*
 import com.android_academy.db.Movie
-import com.android_academy.startfromscratch.di.DependencyInjection
 import com.android_academy.startfromscratch.repository.MoviesRepository
+import kotlinx.coroutines.launch
 
 enum class State { LOADING, LOADED, ERROR }
 
@@ -25,13 +25,10 @@ class MoviesViewModelFactory(private val moviesRepository: MoviesRepository) : V
 
 class MoviesViewModelImpl(val moviesRepository: MoviesRepository) : MoviesViewModel, ViewModel() {
 
-    private val executors = DependencyInjection.viewModelExecutor
-
     private val _likedMovies = MutableLiveData<List<Movie>>()
 
     override val likedMoviesLiveData: LiveData<List<Movie>>
         get() = _likedMovies
-
 
     // State
     private val state: MutableLiveData<State> by lazy { MutableLiveData<State>() }
@@ -54,7 +51,7 @@ class MoviesViewModelImpl(val moviesRepository: MoviesRepository) : MoviesViewMo
     }
 
     private fun loadMovies() {
-        executors.execute {
+        viewModelScope.launch {
             moviesRepository.getMovies {
                 if (it == null) {
                     state.postValue(State.ERROR)
