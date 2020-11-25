@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android_academy.startfromscratch.R
-import com.android_academy.startfromscratch.db.Movie
+import com.android_academy.db.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_item.view.*
 

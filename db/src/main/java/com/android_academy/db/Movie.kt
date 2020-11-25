@@ -1,4 +1,4 @@
-package com.android_academy.startfromscratch.db
+package com.android_academy.db
 
 import com.android_academy.network.MoviesListResult
 import com.android_academy.network.NetworkingConstants.POSTER_BASE_URL

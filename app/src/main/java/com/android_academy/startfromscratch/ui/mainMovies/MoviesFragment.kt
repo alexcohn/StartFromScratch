@@ -10,8 +10,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android_academy.startfromscratch.R
-import com.android_academy.startfromscratch.db.Movie
-import com.android_academy.startfromscratch.db.MovieModelConverter
+import com.android_academy.db.Movie
+import com.android_academy.db.MovieModelConverter
 import com.android_academy.startfromscratch.di.DependencyInjection
 import com.android_academy.startfromscratch.ui.details.DetailsFragment
 import kotlinx.android.synthetic.main.movies_fragment.*
