@@ -1,4 +1,7 @@
-package com.android_academy.startfromscratch.network
+package com.android_academy.network.di
+
+import com.android_academy.network.MoviesListResult
+import com.android_academy.network.NetworkingConstants
 
 //TODO Exercise #1 move it to separate module and change dependency to use it from the network module
 interface MockMovieService {

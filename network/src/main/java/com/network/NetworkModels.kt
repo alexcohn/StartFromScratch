@@ -1,8 +1,7 @@
-package com.android_academy.startfromscratch.network
+package com.android_academy.network
 
 import com.google.gson.annotations.SerializedName
 
-//TODO Exercise #1 move it to separate file and change import in MockMovieService and MockNetworkDependency
 data class MoviesListResult (
 
     @SerializedName("page") val page : Int,
@@ -11,7 +10,6 @@ data class MoviesListResult (
     @SerializedName("results") val results : List<MovieResult>
 )
 
-//TODO Exercise #1 move it to separate file and change import in MockMovieService and MockNetworkDependency
 data class MovieResult (
 
     @SerializedName("vote_count") val voteCount : Int,

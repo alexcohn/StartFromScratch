@@ -1,4 +1,4 @@
-package com.android_academy.startfromscratch.network
+package com.android_academy.network
 
 //TODO Exercise #1 move it to separate file and change import in MockMovieService
 object NetworkingConstants  {
