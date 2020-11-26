@@ -13,15 +13,6 @@ interface MoviesViewModel {
     fun observeMovies(lifecycle: Lifecycle,observer : (List<Movie>) -> Unit)
 }
 
-class MoviesViewModelFactory(private val moviesRepository: MoviesRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MoviesViewModelImpl::class.java)) {
-            return MoviesViewModelImpl(moviesRepository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
-
 
 class MoviesViewModelImpl(val moviesRepository: MoviesRepository) : MoviesViewModel, ViewModel() {
 

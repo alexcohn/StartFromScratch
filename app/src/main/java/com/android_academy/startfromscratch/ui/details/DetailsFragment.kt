@@ -5,16 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.android_academy.startfromscratch.R
 import com.android_academy.db.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.details_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailsFragment : Fragment() {
 
-    //TODO change our viewModel to be initialized by Koin View Model method: " by viewModel<DetailsViewModelImpl>()" and remove lateinit
-    lateinit var viewModel : DetailsViewModelImpl
+    private val viewModel by viewModel<DetailsViewModelImpl>()
 
     companion object {
         internal const val MOVIE_BUNDLE_KEY = "unique_movie_key"

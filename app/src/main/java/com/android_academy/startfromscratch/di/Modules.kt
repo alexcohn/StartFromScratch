@@ -6,9 +6,9 @@ import com.android_academy.db.di.dbModule
 import com.android_academy.network.di.networkingModule
 
 
-val exercise5modulesList = listOf(
+val modulesList = listOf(
     networkingModule,
     dbModule,
-    viewModelsModule
-//TODO add here our reposModule from ReposModule.kt
+    viewModelsModule,
+    reposModule
 )
