@@ -9,13 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android_academy.startfromscratch.R
 import com.android_academy.db.Movie
-import com.android_academy.startfromscratch.di.DependencyInjection
 import com.android_academy.startfromscratch.ui.details.DetailsFragment
 import kotlinx.android.synthetic.main.movies_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MoviesFragment : Fragment(), OnMovieClickListener {
@@ -25,15 +24,12 @@ class MoviesFragment : Fragment(), OnMovieClickListener {
     }
 
     private lateinit var moviesAdapter: MoviesViewAdapter
-    val factory = MoviesViewModelFactory(DependencyInjection.moviesRepo)
-    lateinit var moviesViewModel: MoviesViewModel
+    private val moviesViewModel: MoviesViewModel by viewModel<MoviesViewModelImpl>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val factory = MoviesViewModelFactory(DependencyInjection.moviesRepo)
-        moviesViewModel = ViewModelProvider(this, factory).get(MoviesViewModelImpl::class.java)
         return inflater.inflate(R.layout.movies_fragment, container, false)
     }
 
